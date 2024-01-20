@@ -8,7 +8,7 @@ if __name__ == "__main__":
     try:
         # Set up environment variables, retrieved from GitHub Actions
         # The get_changed_files GitHub tool outputs a string of file paths separated by spaces
-        changedFiles = os.environ["CHANGED_FILES"].split(" ") 
+        # changedFiles = os.environ["CHANGED_FILES"].split(" ") 
         # The hashcode of this push
         pushHash = os.environ["GITHUB_SHA"] 
         # The person who triggered the push
@@ -22,7 +22,7 @@ if __name__ == "__main__":
               "- If this still doesn't work, shit.\n" + 
               "Python error message: ", end = "")
         print(e)
-        changedFiles = []
+        changedFiles = ["components/ecu/ecu_firmware/Core/Src/can.c"]
     
     for changedFilePath in changedFiles:
 

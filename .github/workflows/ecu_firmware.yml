@@ -34,8 +34,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Insert push hash to modified files
         run: |
-          CHANGED_FILES=${{ steps.getChangedFiles.outputs.all }}
-          python .github/workflows/update_files.py
+          CHANGED_FILES=${{ steps.getChangedFiles.outputs.all }} python .github/workflows/update_files.py
           
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
