@@ -8,8 +8,8 @@ if __name__ == "__main__":
     try:
         # Set up environment variables, retrieved from GitHub Actions
         # The get_changed_files GitHub tool outputs a string of file paths separated by spaces
-        # changedFiles = os.environ["CHANGED_FILES"].split(" ") 
-        changedFiles = ["components/ecu/ecu_firmware/Core/Src/can.c"]
+        changedFiles = os.environ["CHANGED_FILES"].split(" ") 
+        # changedFiles = ["components/ecu/ecu_firmware/Core/Src/can.c"]
         # The hashcode of this push
         pushHash = os.environ["GITHUB_SHA"] 
         # The person who triggered the push
@@ -41,6 +41,6 @@ if __name__ == "__main__":
             for line in changedFileContents:
                 changedFile.write(line)
 
-            infoString = "#define VERSION_INFORMATION \"" + pushHash + " by " + pushUser + " on " + pushDate + "\""
+            infoString = "#define VERSION_INFORMATION \"Push HashCode: " + pushHash + ", by: " + pushUser + ", on: " + pushDate + ".\""
             changedFile.write(infoString)
             print("  - appended: " + infoString)
