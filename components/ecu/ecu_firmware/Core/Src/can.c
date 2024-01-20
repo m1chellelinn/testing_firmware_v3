@@ -34,5 +34,4 @@ void CAN_send_current(int currentVal, int doc_coc) {
     } while (status != HAL_OK && HAL_GetTick() - begin_tick <= CAN_TIMEOUT);
 }
 
-// yo 7
-#define VERSION_INFORMATION "32c0fdb82e447ca63b9e3193e4cbde5cbdb4e5ef by m1chellelinn on January 20, 2024"
+// yo 8
