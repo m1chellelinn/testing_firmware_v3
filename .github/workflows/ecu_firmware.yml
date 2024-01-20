@@ -12,7 +12,6 @@ on:
 
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     steps:
@@ -34,8 +33,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Insert push hash to modified files
         run: |
-          CHANGED_FILES=${{ steps.getChangedFiles.outputs.all }} 
-          python .github/workflows/update_files.py
+          CHANGED_FILES=${{ steps.getChangedFiles.outputs.all }} python .github/workflows/update_files.py
       - name: Commit & push file
         run: |
           git config --global user.email "michaellin0902@gmail.com"
