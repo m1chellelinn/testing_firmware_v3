@@ -34,10 +34,13 @@ if __name__ == "__main__":
 
             for line in changedFile:
                 changedFileContents.append(line)
-            
+        
+        print("Writing to file: " + changedFilePath)
         with open(changedFilePath, "w") as changedFile:
 
             for line in changedFileContents:
                 changedFile.write(line)
 
-            changedFile.write("#define VERSION_INFORMATION \"" + pushHash + " by " + pushUser + " on " + pushDate + "\"")
+            infoString = "#define VERSION_INFORMATION \"" + pushHash + " by " + pushUser + " on " + pushDate + "\""
+            changedFile.write(infoString)
+            print("  - appended: " + infoString)
