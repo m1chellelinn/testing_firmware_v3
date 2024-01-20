@@ -35,7 +35,17 @@ jobs:
       - name: Insert push hash to modified files
         run: |
           CHANGED_FILES=${{ steps.getChangedFiles.outputs.all }} python .github/workflows/update_files.py
-          
+      - name: check for changes
+        run: git status
+      - name: stage changed files
+        run: git add .
+      - name: commit changed files
+        run: git commit -m "Auto-updating version info"
+      - name: fetch from master
+        run: git fetch origin master
+      - name: push code to master
+        run: git push origin HEAD:master
+
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
       - name: Build PlatformIO Project
