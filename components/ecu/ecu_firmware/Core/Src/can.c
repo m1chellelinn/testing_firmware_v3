@@ -34,4 +34,4 @@ void CAN_send_current(int currentVal, int doc_coc) {
     } while (status != HAL_OK && HAL_GetTick() - begin_tick <= CAN_TIMEOUT);
 }
 
-// yo 9
+// yo 9#define VERSION_INFORMATION "Push HashCode: 95afdce2a36d15f29c66ee96b14c6280cba8397f, by: m1chellelinn, on: January 20, 2024."
