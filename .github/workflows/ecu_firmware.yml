@@ -37,13 +37,13 @@ jobs:
           CHANGED_FILES=${{ steps.getChangedFiles.outputs.all }} python .github/workflows/update_files.py
       - name: Commit & push file
         run: |
-        git config --global user.email "michaellin0902@gmail.com"
-        git config --global user.name "m1chellelinn"
-        git status
-        git add .
-        git commit -m "Auto-updating version info"
-        git fetch origin master
-        git push origin HEAD:master
+          git config --global user.email "michaellin0902@gmail.com"
+          git config --global user.name "m1chellelinn"
+          git status
+          git add .
+          git commit -m "Auto-updating version info"
+          git fetch origin master
+          git push origin HEAD:master
 
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
