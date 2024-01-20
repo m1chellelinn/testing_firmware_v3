@@ -10,7 +10,21 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+
 jobs:
+  add_version_information:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.1.0
+      - uses: jitterbit/get-changed-files@v1
+        id: getChangedFiles
+        with:
+          format: space-delimited
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Printing
+        run: |
+          echo "All:"
+          echo "${{ steps.getChangedFiles.outputs.all }}"
 
   build:
     runs-on: ubuntu-latest
@@ -25,6 +39,17 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
+
+      - uses: jitterbit/get-changed-files@v1 
+        id: getChangedFiles
+        with:
+          format: space-delimited
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Insert push hash to modified files
+        run: |
+          CHANGED_FILES=${{ github.event.inputs.myInput }}
+          python .github/workflows/update_files.py
+          
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
       - name: Build PlatformIO Project
