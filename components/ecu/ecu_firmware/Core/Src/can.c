@@ -34,4 +34,4 @@ void CAN_send_current(int currentVal, int doc_coc) {
     } while (status != HAL_OK && HAL_GetTick() - begin_tick <= CAN_TIMEOUT);
 }
 
-// yo 2
+// yo 3
