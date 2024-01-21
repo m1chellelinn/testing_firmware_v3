@@ -3,7 +3,14 @@ import os
 
 from datetime import date
 
-
+def insertLineToFile(file, originalContent, line, lineNumber, doReplace=False):
+    for i in range(0,len(originalContent)):
+        if (i == lineNumber):
+            file.write(line)
+            if not doReplace:
+                file.write(originalContent[i])
+        else:
+            file.write(originalContent[i])
 
 if __name__ == "__main__":
     try:
@@ -24,6 +31,13 @@ if __name__ == "__main__":
               "- If this still doesn't work, shit.\n" + 
               "Python error message: ", end = "")
         print(e)
+
+        # This is a debug tool:
+        # changedFiles = [".github/workflows/test.c"]
+        # pushHash = "GITHUB_SHA"
+        # pushUser = "GITHUB_ACTOR"
+        # today = date.today()
+        # pushDate = today.strftime("%B %d, %Y")
         
     
     for changedFilePath in changedFiles:
@@ -31,17 +45,33 @@ if __name__ == "__main__":
         # For each file, open it with "read" first and retrieve all contents.
         # After, we'll open it with "write" to copy everything plus the version info back
         changedFileContents = []
+        index = 0
+        firstHeaderIndex = -1
+        firstDefineIndex = -1
+        versionInfoIndex = -1
         with open(changedFilePath, "r") as changedFile:
 
             for line in changedFile:
                 changedFileContents.append(line)
+                if (firstHeaderIndex == -1 and line.startswith("#include")):
+                    firstHeaderIndex = index
+                if (firstDefineIndex == -1 and line.startswith("#define")):
+                    firstDefineIndex = index
+                if (versionInfoIndex == -1 and line.startswith("#define VERSION_INFORMATION")):
+                    versionInfoIndex = index
+                index += 1
         
         print("Writing to file: " + changedFilePath)
         with open(changedFilePath, "w") as changedFile:
+            infoString = "#define VERSION_INFORMATION \"Push HashCode: " + pushHash + ", by: " + pushUser + ", on: " + pushDate + ".\"\n"
 
-            for line in changedFileContents:
-                changedFile.write(line)
+            if (versionInfoIndex != -1):
+                insertLineToFile(changedFile, changedFileContents, infoString, versionInfoIndex, True)
+            elif (firstDefineIndex != -1):
+                insertLineToFile(changedFile, changedFileContents, infoString, firstDefineIndex)
+            elif (firstHeaderIndex != -1):
+                insertLineToFile(changedFile, changedFileContents, infoString, firstHeaderIndex)
+            else:
+                insertLineToFile(changedFile, changedFileContents, infoString, 0)
 
-            infoString = "#define VERSION_INFORMATION \"Push HashCode: " + pushHash + ", by: " + pushUser + ", on: " + pushDate + ".\""
-            changedFile.write(infoString)
             print("  - appended: " + infoString)
