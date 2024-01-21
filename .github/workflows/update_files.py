@@ -42,36 +42,39 @@ if __name__ == "__main__":
     
     for changedFilePath in changedFiles:
 
-        # For each file, open it with "read" first and retrieve all contents.
-        # After, we'll open it with "write" to copy everything plus the version info back
-        changedFileContents = []
-        index = 0
-        firstHeaderIndex = -1
-        firstDefineIndex = -1
-        versionInfoIndex = -1
-        with open(changedFilePath, "r") as changedFile:
+        # If a GitHub Actions file was changed, we shouldn't update it
+        if (not changedFilePath.startswith(".github")):
 
-            for line in changedFile:
-                changedFileContents.append(line)
-                if (firstHeaderIndex == -1 and line.startswith("#include")):
-                    firstHeaderIndex = index
-                if (firstDefineIndex == -1 and line.startswith("#define")):
-                    firstDefineIndex = index
-                if (versionInfoIndex == -1 and line.startswith("#define VERSION_INFORMATION")):
-                    versionInfoIndex = index
-                index += 1
-        
-        print("Writing to file: " + changedFilePath)
-        with open(changedFilePath, "w") as changedFile:
-            infoString = "#define VERSION_INFORMATION \"Push HashCode: " + pushHash + ", by: " + pushUser + ", on: " + pushDate + ".\"\n"
+            # For each file, open it with "read" first and retrieve all contents.
+            # After, we'll open it with "write" to copy everything plus the version info back
+            changedFileContents = []
+            index = 0
+            firstHeaderIndex = -1
+            firstDefineIndex = -1
+            versionInfoIndex = -1
+            with open(changedFilePath, "r") as changedFile:
 
-            if (versionInfoIndex != -1):
-                insertLineToFile(changedFile, changedFileContents, infoString, versionInfoIndex, True)
-            elif (firstDefineIndex != -1):
-                insertLineToFile(changedFile, changedFileContents, infoString, firstDefineIndex)
-            elif (firstHeaderIndex != -1):
-                insertLineToFile(changedFile, changedFileContents, infoString, firstHeaderIndex)
-            else:
-                insertLineToFile(changedFile, changedFileContents, infoString, 0)
+                for line in changedFile:
+                    changedFileContents.append(line)
+                    if (firstHeaderIndex == -1 and line.startswith("#include")):
+                        firstHeaderIndex = index
+                    if (firstDefineIndex == -1 and line.startswith("#define")):
+                        firstDefineIndex = index
+                    if (versionInfoIndex == -1 and line.startswith("#define VERSION_INFORMATION")):
+                        versionInfoIndex = index
+                    index += 1
+            
+            print("Writing to file: " + changedFilePath)
+            with open(changedFilePath, "w") as changedFile:
+                infoString = "#define VERSION_INFORMATION \"Push HashCode: " + pushHash + ", by: " + pushUser + ", on: " + pushDate + ".\"\n"
 
-            print("  - appended: " + infoString)
+                if (versionInfoIndex != -1):
+                    insertLineToFile(changedFile, changedFileContents, infoString, versionInfoIndex, True)
+                elif (firstDefineIndex != -1):
+                    insertLineToFile(changedFile, changedFileContents, infoString, firstDefineIndex)
+                elif (firstHeaderIndex != -1):
+                    insertLineToFile(changedFile, changedFileContents, infoString, firstHeaderIndex + 1)
+                else:
+                    insertLineToFile(changedFile, changedFileContents, infoString, 0)
+
+                print("  - appended: " + infoString)

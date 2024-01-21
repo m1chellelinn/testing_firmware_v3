@@ -40,7 +40,7 @@ jobs:
           git config --global user.name "m1chellelinn"
           git status
           git add .
-          git commit -m "Auto-updating version info"
+          git commit -m "Auto-updating version info: invoked by .github/workflows/update_files.py"
           git fetch origin master
           git push origin HEAD:master
 
