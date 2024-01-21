@@ -32,12 +32,11 @@ if __name__ == "__main__":
               "Python error message: ", end = "")
         print(e)
 
-        # This is a debug tool:
-        # changedFiles = [".github/workflows/test.c"]
-        # pushHash = "GITHUB_SHA"
-        # pushUser = "GITHUB_ACTOR"
-        # today = date.today()
-        # pushDate = today.strftime("%B %d, %Y")
+        changedFiles = ["components/test.c"]
+        pushHash = "UNKNOWN"
+        pushUser = "UNKNOWN"
+        today = date.today()
+        pushDate = today.strftime("%B %d, %Y")
         
     
     for changedFilePath in changedFiles:
@@ -45,25 +44,32 @@ if __name__ == "__main__":
         # If a GitHub Actions file was changed, we shouldn't update it
         if (not changedFilePath.startswith(".github")):
 
-            # For each file, open it with "read" first and retrieve all contents.
-            # After, we'll open it with "write" to copy everything plus the version info back
+            # Step 1: For each file, open it with "read" first and retrieve all contents.
+            # - Look for any #define or #include statemenets and mark their locations. This is so that, later,
+            #   we know where to best append the version info.
             changedFileContents = []
             index = 0
-            firstHeaderIndex = -1
+            lastHeaderIndex = -1
             firstDefineIndex = -1
             versionInfoIndex = -1
             with open(changedFilePath, "r") as changedFile:
 
                 for line in changedFile:
                     changedFileContents.append(line)
-                    if (firstHeaderIndex == -1 and line.startswith("#include")):
-                        firstHeaderIndex = index
-                    if (firstDefineIndex == -1 and line.startswith("#define")):
-                        firstDefineIndex = index
                     if (versionInfoIndex == -1 and line.startswith("#define VERSION_INFORMATION")):
                         versionInfoIndex = index
+                    elif (line.startswith("#include")):
+                        lastHeaderIndex = index
+                    elif (firstDefineIndex == -1 and line.startswith("#define")):
+                        firstDefineIndex = index
                     index += 1
-            
+            a=1
+            # Step 2: append info back into file
+            # Rules:
+            # - if exists a "#define VERSION_INFORMATION", replace it with the new one
+            # - if currently no version information constants, put it above the first #define (anything)
+            # - if no #defines anywhere, put it behind the last #include
+            # - if no #includes (ain't no way), put it at the start of file
             print("Writing to file: " + changedFilePath)
             with open(changedFilePath, "w") as changedFile:
                 infoString = "#define VERSION_INFORMATION \"Push HashCode: " + pushHash + ", by: " + pushUser + ", on: " + pushDate + ".\"\n"
@@ -72,8 +78,8 @@ if __name__ == "__main__":
                     insertLineToFile(changedFile, changedFileContents, infoString, versionInfoIndex, True)
                 elif (firstDefineIndex != -1):
                     insertLineToFile(changedFile, changedFileContents, infoString, firstDefineIndex)
-                elif (firstHeaderIndex != -1):
-                    insertLineToFile(changedFile, changedFileContents, infoString, firstHeaderIndex + 1)
+                elif (lastHeaderIndex != -1):
+                    insertLineToFile(changedFile, changedFileContents, infoString, lastHeaderIndex + 1)
                 else:
                     insertLineToFile(changedFile, changedFileContents, infoString, 0)
 
