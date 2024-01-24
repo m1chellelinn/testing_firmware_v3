@@ -10,7 +10,7 @@
 #include "can.h"
 #include "main.h"
 
-#define VERSION_INFORMATION "Push HashCode: ae274c32aedf83b81d747aea9e59e454094b5c01, by: m1chellelinn, on: January 21, 2024."
+#define VERSION_INFORMATION "Push HashCode: f99c17e80ab727b0d422d0fb1ad470ec302f34ce, by: m1chellelinn, on: January 24, 2024."
 #define CAN_ID 0x450
 #define MESSAGE_LENGTH 3
 
