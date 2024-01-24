@@ -30,7 +30,7 @@ jobs:
         id: getChangedFiles
         with:
           format: space-delimited
-          token: ${{ secrets.GITHUB_TOKEN }}
+#          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Insert push hash to modified files
         run: |
           CHANGED_FILES=${{ steps.getChangedFiles.outputs.all }} python .github/workflows/update_files.py

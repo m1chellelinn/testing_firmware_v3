@@ -25,7 +25,10 @@ if __name__ == "__main__":
         # Quality of life: today's date :D
         today = date.today()
         pushDate = today.strftime("%B %d, %Y")
+
     except Exception as e:
+        # If we're unable to get the proper environment variables, os.environ will throw exceptions
+        # We should 
         print("ERROR: failed to retrieve GitHub environment variables. Stopping version information insertion. \n" + 
               "- Make sure that files were changed and there are no spaces in file names (required by the module this action uses)\n" +
               "- If this still doesn't work, shit.\n" + 
