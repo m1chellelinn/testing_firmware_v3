@@ -35,3 +35,4 @@ void CAN_send_current(int currentVal, int doc_coc) {
         status = HAL_CAN_AddTxMessage(CAN_hcan, &current_message_header, data, pTxMailbox);
     } while (status != HAL_OK && HAL_GetTick() - begin_tick <= CAN_TIMEOUT);
 }
+
